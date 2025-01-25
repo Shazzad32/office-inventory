@@ -81,7 +81,7 @@ const Store = () => {
       <div className="w-full bg-gray-500 h-[90%] flex items-center justify-center">
         <div className="h-[99%] w-[99.5%]">
           <div className="h-[8%] w-full bg-gray-800 flex text-white">
-            <div className="w-[84%] flex items-center px-2 uppercase">
+            <div className="w-[100%] flex items-center px-2 uppercase">
               <p className="flex-[1.75]">Device_id</p>
               <p className="flex-[1.75]">Device_Model</p>
               <p className="flex-[1.75]">Device_Type</p>
@@ -91,9 +91,9 @@ const Store = () => {
               <p className="flex-[1.75]">Insert Date</p>
               <p className="flex-[1.75]">Sending Date</p>
             </div>
-            <div className="w-[15%]  flex items-center justify-center uppercase">
+            {/* <div className="w-[15%]  flex items-center justify-center uppercase">
               Action
-            </div>
+            </div> */}
           </div>
           <div className="h-[92%] overflow-auto bg-white">
             {state.datas.map((item, i) => (

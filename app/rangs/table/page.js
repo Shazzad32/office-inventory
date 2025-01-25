@@ -15,7 +15,7 @@ const RetailTable = ({ item }) => {
 
   return (
     <div className={`h-auto w-[100%]  flex lg:flex-row lg:h-14 items-center`}>
-      <div className="hidden lg:flex lg:w-[85%] lg:px-2">
+      <div className="hidden lg:flex lg:w-[100%] lg:px-2">
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
           {item?.device_id}
         </p>
@@ -61,7 +61,7 @@ const RetailTable = ({ item }) => {
           <strong>Sending Date:</strong> {formattedSendingDate}
         </p>
       </div>
-      <div className="flex flex-col items-center justify-center gap-6 w-[15%] lg:w-[15%] lg:mt-0 lg:flex lg:flex-row lg:gap-12">
+      {/* <div className="flex flex-col items-center justify-center gap-6 w-[15%] lg:w-[15%] lg:mt-0 lg:flex lg:flex-row lg:gap-12">
         {item?.is_send ? (
           <>
             <FiEdit className="text-gray-400 cursor-not-allowed" />
@@ -73,7 +73,7 @@ const RetailTable = ({ item }) => {
             </Link>
           </>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

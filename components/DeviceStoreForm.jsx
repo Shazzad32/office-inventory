@@ -63,12 +63,6 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
       [name]: value || (name === "insert_date" ? new Date().toISOString() : ""),
     }));
   };
-  // const handleChangeTwo = (e) => {
-  //   setItem((prevItem) => ({
-  //     ...prevItem,
-  //     send_to: e.target.value,
-  //   }));
-  // };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -78,78 +72,6 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
     }));
   };
 
-  // const handleTransfer = async () => {
-  //   const endpoint =
-  //     item.send_to === "Retail" || "Rangs" ? "/api/retail" : "/api/rangs";
-
-  //   try {
-  //     const transferRes = await fetch(endpoint, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(item),
-  //     });
-
-  //     if (!transferRes.ok) {
-  //       const errorText = await transferRes.text();
-  //       throw new Error(`Failed to transfer product: ${errorText}`);
-  //     }
-
-  //     const deleteRes = await fetch(`/api/store/${item._id}`, {
-  //       method: "DELETE",
-  //     });
-
-  //     if (!deleteRes.ok) {
-  //       const errorText = await deleteRes.text();
-  //       console.error("Delete request failed:", deleteRes.status, errorText);
-  //       throw new Error(`Failed to delete product from store: ${errorText}`);
-  //     }
-
-  //     router.push("/store");
-  //   } catch (error) {
-  //     console.error("Error during transfer:", error);
-  //     alert(`Error: ${error.message}`);
-  //   }
-  // };
-
-  // const handleTransfer = async () => {
-  //   const endpoint =
-  //     item.send_to === "Retail" || item.send_to === "Rangs"
-  //       ? "/api/retail"
-  //       : "/api/rangs";
-
-  //   try {
-  //     const transferRes = await fetch(endpoint, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(item),
-  //     });
-
-  //     if (!transferRes.ok) {
-  //       const errorText = await transferRes.text();
-  //       throw new Error(`Failed to transfer product: ${errorText}`);
-  //     }
-
-  //     const deleteRes = await fetch(`/api/store/${item._id}`, {
-  //       method: "DELETE",
-  //     });
-
-  //     if (!deleteRes.ok) {
-  //       const errorText = await deleteRes.text();
-  //       console.error("Delete request failed:", deleteRes.status, errorText);
-  //       throw new Error(`Failed to delete product from store: ${errorText}`);
-  //     }
-
-  //     router.push("/store");
-  //   } catch (error) {
-  //     console.error("Error during transfer:", error);
-  //     alert(`Error: ${error.message}`);
-  //   }
-  // };
-
   const handleTransfer = async () => {
     const endpoint =
       item.send_to === "Retail"
@@ -157,15 +79,13 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
         : item.send_to === "Rangs"
         ? "/api/rangs"
         : null;
-  
-    // Check if the endpoint is valid
+
     if (!endpoint) {
       alert("Invalid destination selected. Please try again.");
       return;
     }
-  
+
     try {
-      // Transfer the item to the selected endpoint
       const transferRes = await fetch(endpoint, {
         method: "POST",
         headers: {
@@ -173,35 +93,32 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
         },
         body: JSON.stringify(item),
       });
-  
+
       if (!transferRes.ok) {
         const errorText = await transferRes.text();
         throw new Error(`Failed to transfer product: ${errorText}`);
       }
-  
-      // Delete the item from the store
+
       const deleteRes = await fetch(`/api/store/${item._id}`, {
         method: "DELETE",
       });
-  
+
       if (!deleteRes.ok) {
         const errorText = await deleteRes.text();
         console.error("Delete request failed:", deleteRes.status, errorText);
         throw new Error(`Failed to delete product from store: ${errorText}`);
       }
-  
-      // Redirect to the store page
+
       router.push("/store");
     } catch (error) {
       console.error("Error during transfer:", error);
       alert(`Error: ${error.message}`);
     }
   };
-  
 
   return (
     <div className="w-full h-[100%] flex items-center justify-center gap-2 p-4 lg:p-6 lg:w-[50%] lg:gap-4 flex-col">
-      <div className="w-full h-[80%] flex gap-4 flex-col">
+      <div className="w-full h-[90%] flex gap-4 flex-col">
         <TextField
           type="text"
           name="device_id"
@@ -269,8 +186,8 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
           />
         </LocalizationProvider>
       </div>
-      <div className="flex w-full justify-end gap-4">
-        <Button variant="outlined">
+      <div className="flex w-full justify-end">
+        <Button variant="outlined" className="mr-4">
           <Link href="/store">Cancel</Link>
         </Button>
         <Button

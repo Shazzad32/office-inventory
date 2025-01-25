@@ -61,7 +61,7 @@ const DeviceRangsForm = ({ defaultItem, isUpdate }) => {
 
   return (
     <div className="w-full h-[100%] flex items-center justify-center gap-2 p-4 lg:p-6 lg:w-[50%] lg:gap-4 flex-col">
-      <div className="w-full h-[80%] flex gap-4 flex-col">
+      <div className="w-full lg:h-[85%] h-[95%] flex gap-4 flex-col">
         <TextField
           type="text"
           name="device_id"
@@ -69,34 +69,78 @@ const DeviceRangsForm = ({ defaultItem, isUpdate }) => {
           label="Device Id"
           onChange={handleChange}
         />
-        <TextField
-          type="text"
-          name="device_model"
-          value={item.device_model || ""}
-          label="Device Model"
-          onChange={handleChange}
-        />
-        <TextField
-          type="text"
-          name="device_type"
-          value={item.device_type || ""}
-          label="Device Type"
-          onChange={handleChange}
-        />
-        <TextField
-          type="text"
-          name="from"
-          value={item.from || ""}
-          label="From"
-          onChange={handleChange}
-        />
-        <TextField
-          type="text"
-          name="send_to"
-          value={item.send_to || ""}
-          label="Send To"
-          onChange={handleChange}
-        />
+        <div className="flex gap-2">
+          {" "}
+          <TextField
+            className="w-[50%]"
+            type="text"
+            name="device_model"
+            value={item.device_model || ""}
+            label="Device Model"
+            onChange={handleChange}
+          />
+          <TextField
+            className="w-[50%]"
+            type="text"
+            name="device_type"
+            value={item.device_type || ""}
+            label="Device Type"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex gap-2">
+          <TextField
+            className="w-[50%]"
+            type="text"
+            name="from"
+            value={item.from || ""}
+            label="From"
+            onChange={handleChange}
+          />
+          <TextField
+            className="w-[50%]"
+            type="text"
+            name="send_to"
+            value={item.send_to || ""}
+            label="Send To"
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="flex gap-2">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              className="w-[50%]"
+              label="Insert Date"
+              name="insert_date"
+              value={item.insert_date ? dayjs(item.insert_date) : null}
+              onChange={(newValue) => {
+                handleChange({
+                  target: {
+                    name: "insert_date",
+                    value: newValue ? newValue.toISOString() : "", // Use ISO format
+                  },
+                });
+              }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              className="w-[50%]"
+              label="Sending Date"
+              name="sending_date"
+              value={item.sending_date ? dayjs(item.sending_date) : null}
+              onChange={(newValue) => {
+                handleChange({
+                  target: {
+                    name: "sending_date",
+                    value: newValue ? newValue.toISOString() : "", // Use ISO format
+                  },
+                });
+              }}
+            />
+          </LocalizationProvider>
+        </div>
         <TextField
           type="text"
           name="issue_by"
@@ -104,40 +148,8 @@ const DeviceRangsForm = ({ defaultItem, isUpdate }) => {
           label="Issue By"
           onChange={handleChange}
         />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            className="w-[100%]"
-            label="Insert Date"
-            name="insert_date"
-            value={item.insert_date ? dayjs(item.insert_date) : null}
-            onChange={(newValue) => {
-              handleChange({
-                target: {
-                  name: "insert_date",
-                  value: newValue ? newValue.toISOString() : "", // Use ISO format
-                },
-              });
-            }}
-          />
-        </LocalizationProvider>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            className="w-[100%]"
-            label="Sending Date"
-            name="sending_date"
-            value={item.sending_date ? dayjs(item.sending_date) : null}
-            onChange={(newValue) => {
-              handleChange({
-                target: {
-                  name: "sending_date",
-                  value: newValue ? newValue.toISOString() : "", // Use ISO format
-                },
-              });
-            }}
-          />
-        </LocalizationProvider>
         <div className="flex">
-          <p className="w-[33%] h-[40px] flex items-center">
+          <p className="lg:w-[20%] w-[40%] h-[40px] flex items-center">
             SEND
             {
               <Switch
@@ -150,7 +162,7 @@ const DeviceRangsForm = ({ defaultItem, isUpdate }) => {
           </p>
 
           {item.is_send && (
-            <div className="flex">
+            <div>
               <TextField
                 type="text"
                 label="Workshop"

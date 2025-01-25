@@ -92,7 +92,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
   };
 
   const handleAutocompleteChange = (name, newValue) => {
-    setUser((prevUser) => ({
+    setItem((prevUser) => ({
       ...prevUser,
       [name]: newValue,
     }));
@@ -100,7 +100,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
 
   return (
     <div className="w-full flex items-center justify-center p-4 lg:p-6 lg:w-[50%] lg:gap-2 flex-col">
-      <div className="w-full h-[95%] flex gap-2 flex-col">
+      <div className="w-full h-[100%] lg:h-[90%] flex gap-2 flex-col">
         <TextField
           type="text"
           name="device_id"
@@ -173,7 +173,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           />
         </LocalizationProvider>
         <div className="flex">
-          <p className="w-[33%] h-[40px] flex items-center">
+          <p className="lg:w-[25%] w-[40%] h-[40px] flex items-center">
             COMPLETE
             {
               <Switch

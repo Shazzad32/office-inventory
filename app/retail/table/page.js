@@ -52,15 +52,11 @@ const RetailTable = ({ item }) => {
         {item?.is_complete ? (
           <>
             <FiEdit className="text-gray-400 cursor-not-allowed" />
-            <DeleteForeverIcon className="text-gray-400 cursor-not-allowed" />
           </>
         ) : (
           <>
             <Link href={`/retail/${item?._id}/update`}>
               <FiEdit className="text-black" />
-            </Link>
-            <Link href={`/retail/${item?._id}/delete`}>
-              <DeleteForeverIcon className="text-red-700" />
             </Link>
           </>
         )}
