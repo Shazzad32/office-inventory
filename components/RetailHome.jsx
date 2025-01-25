@@ -49,29 +49,6 @@ const RetailHome = (props) => {
     return total + Number(item.device_price || 0);
   }, 0);
 
-  // const filteredSales = state.datas.filter((item) => {
-  //   if (item.install_date) {
-  //     const itemDate = new Date(item.install_date).toISOString().split("T")[0];
-  //     return itemDate === selectedDate;
-  //   }
-  //   return false;
-  // });
-
-  // const filteredSales = state.datas.filter((item) => {
-  //   if (item.install_date) {
-  //     const itemDate = new Date(item.install_date).toLocaleDateString("en-CA", {
-  //       timeZone: "Asia/Dhaka",
-  //       year: "numeric",
-  //       month: "2-digit",
-  //       day: "2-digit",
-  //     });
-  //     return itemDate === selectedDate;
-  //   }
-  //   return false;
-  // });
-
-  // const filteredSalesCount = filteredSales.length;
-
   const filteredSales = state.datas.filter((item) => {
     if (item.install_date) {
       const itemDate = new Date(item.install_date).toLocaleDateString("en-CA", {
@@ -85,7 +62,6 @@ const RetailHome = (props) => {
     return false;
   });
 
-  // Total count of devices with is_complete === true for the selected date
   const totalCompleteDevices = filteredSales.length;
 
   const filteredSalesAmount = filteredSales.reduce((total, item) => {
@@ -146,7 +122,10 @@ const RetailHome = (props) => {
           </p>
         </div>
       </div>
-      <div className="w-[90%] h-[33%] bg-purple-500 rounded-md flex-col flex items-center justify-center ">
+      <Link
+        href={"retail/sold"}
+        className="w-[90%] h-[33%] bg-purple-500 rounded-md flex-col flex items-center justify-center "
+      >
         <div className="bg-white px-2 py-1 rounded-md flex items-center mt-2 w-[70%] ">
           Sold Device :{" "}
           <span className="text-xl font-bold text-orange-500 ml-1">
@@ -160,7 +139,7 @@ const RetailHome = (props) => {
             {totalDevicePrice}
           </span>
         </div>
-      </div>
+      </Link>
     </div>
   );
 };

@@ -28,6 +28,8 @@ const Store = () => {
     });
   };
 
+  const noSoldDevice = state.datas.filter((item) => item.is_complete === false);
+
   const handleSearch = (e) => {
     const searchTxt = e.target.value.toLowerCase();
     setState((prev) => ({
@@ -66,7 +68,7 @@ const Store = () => {
           <div className="bg-white px-2 rounded-md flex items-center">
             Total Device :{" "}
             <span className="text-xl font-bold text-orange-500 ml-1">
-              {totalDevice}
+              {noSoldDevice.length}
             </span>
           </div>
           <input
@@ -94,7 +96,7 @@ const Store = () => {
             </div>
           </div>
           <div className="h-[92%] overflow-auto bg-white">
-            {state.datas.map((item, i) => (
+            {noSoldDevice.map((item, i) => (
               <div
                 key={i}
                 className={`${i % 2 === 0 ? "bg-gray-200" : "bg-gray-300"}`}

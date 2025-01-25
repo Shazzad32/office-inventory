@@ -23,13 +23,25 @@ export const PUT = async (req, { params }) => {
   try {
     let { id } = await params;
 
-    const { device_id, from, insert_date, issue_by, sending_date } =
-      await req.json();
+    const {
+      device_id,
+      device_model,
+      device_type,
+      issue_by,
+      workshop,
+      send_to,
+      from,
+      insert_date,
+      sending_date,
+    } = await req.json();
 
     const newDevice = await Rangs.findOne({ _id: id });
     newDevice.device_id = device_id;
+    newDevice.device_model = device_model;
     newDevice.from = from;
-    newDevice.to = to;
+    newDevice.workshop = workshop;
+    newDevice.device_type = device_type;
+    newDevice.send_to = send_to;
     newDevice.issue_by = issue_by;
     newDevice.sending_date = sending_date;
     newDevice.insert_date = insert_date;

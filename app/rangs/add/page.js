@@ -3,13 +3,15 @@ import DeviceStoreForm from "@/components/DeviceStoreForm";
 import DeviceRangsForm from "@/components/DeviceRangsForm";
 
 const defaultItem = {
-  device_id: "",
-  from: "",
+  device_id:"",
+  device_model:"",
   device_type:"",
-  to: "",
-  issue_by: "",
-  sending_date: "",
-  insert_date: "",
+  Workshop:"",
+  issue_by:"",
+  send_to:"",
+  from:"",
+  insert_date:"",
+  sending_date:"",
 };
 
 const AddService = () => {

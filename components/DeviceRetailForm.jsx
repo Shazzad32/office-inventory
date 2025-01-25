@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import axios from "axios";
-import DropDown from "@/components/DropDown";
+import districtOptions from "@/data";
 
 const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
   const [state, setState] = useState({
@@ -91,9 +91,16 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
     }));
   };
 
+  const handleAutocompleteChange = (name, newValue) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: newValue,
+    }));
+  };
+
   return (
-    <div className="w-full flex items-center justify-center p-4 lg:p-6 lg:w-[50%] lg:gap-3 flex-col">
-      <div className="w-full h-[90%] flex gap-1 flex-col">
+    <div className="w-full flex items-center justify-center p-4 lg:p-6 lg:w-[50%] lg:gap-2 flex-col">
+      <div className="w-full h-[95%] flex gap-2 flex-col">
         <TextField
           type="text"
           name="device_id"
@@ -101,7 +108,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           label="Device Id"
           onChange={handleChange}
         />
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth>
           <InputLabel>Send To</InputLabel>
           <Select
             type="text"
@@ -117,20 +124,17 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           </Select>
         </FormControl>
 
-        <FormControl fullWidth margin="normal">
-          <InputLabel>District</InputLabel>
-          <Select
-            name="district"
-            value={item.district || ""}
-            onChange={handleChange}
-          >
-            {state.datas.map((tech, i) => (
-              <MenuItem key={i} value={tech.email}>
-                {tech.email}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Autocomplete
+          fullWidth
+          options={districtOptions}
+          value={item.district || ""}
+          onChange={(e, newValue) =>
+            handleAutocompleteChange("district", newValue)
+          }
+          renderInput={(params) => (
+            <TextField {...params} label="District Name" />
+          )}
+        />
         <TextField
           type="text"
           name="issue_by"
@@ -138,7 +142,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           value={item.issue_by || ""}
           onChange={handleChange}
         />
-        <FormControl fullWidth margin="normal">
+        <FormControl fullWidth>
           <InputLabel>Device Type</InputLabel>
           <Select
             type="text"

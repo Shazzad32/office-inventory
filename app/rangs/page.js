@@ -83,10 +83,12 @@ const Store = () => {
           <div className="h-[8%] w-full bg-gray-800 flex text-white">
             <div className="w-[84%] flex items-center px-2 uppercase">
               <p className="flex-[1.75]">Device_id</p>
+              <p className="flex-[1.75]">Device_Model</p>
+              <p className="flex-[1.75]">Device_Type</p>
+              <p className="flex-[1.75]">From</p>
               <p className="flex-[1.75]">Send_To</p>
-              <p className="flex-[1.75]">District</p>
-              <p className="flex-[1.75]">Type</p>
               <p className="flex-[1.75]">Issue_By</p>
+              <p className="flex-[1.75]">Insert Date</p>
               <p className="flex-[1.75]">Sending Date</p>
             </div>
             <div className="w-[15%]  flex items-center justify-center uppercase">
