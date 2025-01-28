@@ -5,6 +5,7 @@ const retailSchema = new Schema({
   device_id: { type: String },
   send_to: { type: String },
   from: { type: String },
+  where: { type: String },
   district: { type: String },
   device_type: { type: String },
   issue_by: { type: String },

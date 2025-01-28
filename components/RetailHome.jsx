@@ -5,9 +5,7 @@ import { React, useState, useEffect } from "react";
 
 const RetailHome = (props) => {
   const [state, setState] = useState({ datas: [] });
-  // const [selectedDate, setSelectedDate] = useState(
-  //   new Date().toISOString().split("T")[0]
-  // );
+
   const [selectedDate, setSelectedDate] = useState(
     new Date().toLocaleDateString("en-CA", {
       timeZone: "Asia/Dhaka",
@@ -22,7 +20,7 @@ const RetailHome = (props) => {
   }, []);
 
   const getData = () => {
-    axios.get("/api/retail").then((res) => {
+    axios.get("/api/devices").then((res) => {
       let data = res.data;
       let old = { ...state };
       old.datas = data;
@@ -30,19 +28,22 @@ const RetailHome = (props) => {
     });
   };
 
+  
+
   const totalStockInRetail = state.datas.filter(
-    (item) => item.is_complete === false
+    (item) =>item.send_to === "Retail" && item.is_complete === false
   );
 
   const totalSell = state.datas.filter((item) => item.is_complete === true);
+
   const unSoldDevice = totalStockInRetail - totalSell;
 
   const voiceDevice = state.datas.filter(
-    (item) => item.device_type === "Voice" && item.is_complete === false
+    (item) =>item.send_to === "Retail" && item.device_type === "Voice" && item.is_complete === false
   );
 
   const nonVoiceDevice = state.datas.filter(
-    (item) => item.device_type === "Non Voice" && item.is_complete === false
+    (item) =>item.send_to === "Retail" && item.device_type === "Non Voice" && item.is_complete === false
   );
 
   const totalDevicePrice = state.datas.reduce((total, item) => {

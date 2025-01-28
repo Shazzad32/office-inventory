@@ -21,16 +21,29 @@ const ImportFile = () => {
           row.insert_date = new Date().toISOString(); // Current date in ISO format
         }
 
+        // Check if the device_id already exists
         try {
-          const response = await axios.post("/api/store", row, {
+          const response = await axios.get(
+            `/api/devices?device_id=${row.device_id}`
+          );
+
+          if (response.data.length > 0) {
+            alert(
+              `Device with ID ${row.device_id} already exists! Skipping this row.`
+            );
+            continue; // Skip inserting this row
+          }
+
+          // If device_id does not exist, save the row
+          const saveResponse = await axios.post("/api/devices", row, {
             headers: { "Content-Type": "application/json" },
           });
 
-          if (response.status === 201) {
+          if (saveResponse.status === 201) {
             console.log("Row saved successfully:", row);
           }
         } catch (error) {
-          console.error("Error saving row:", row, error);
+          console.error("Error checking or saving row:", row, error);
         }
       }
       alert("Data import completed!");

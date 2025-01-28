@@ -18,16 +18,28 @@ const Store = () => {
     getData();
   }, []);
 
-  const getData = () => {
-    axios.get("/api/retail").then((res) => {
-      let data = res.data;
-      let old = { ...state };
-      old.datas = data;
-      old.dataResults = data;
-      setState(old);
-    });
+  // const getData = () => {
+  //   axios.get("/api/devices?send_to=Rangs").then((res) => {
+  //     let data = res.data;
+  //     let old = { ...state };
+  //     old.datas = data;
+  //     old.dataResults = data;
+  //     setState(old);
+  //   });
+  // };
+  const getData = async () => {
+    try {
+      const res = await axios.get("/api/devices?send_to=Retail");
+      const data = res.data;
+      setState((prevState) => ({
+        ...prevState,
+        datas: data,
+        dataResults: data,
+      }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-
   const noSoldDevice = state.datas.filter((item) => item.is_complete === false);
 
   const handleSearch = (e) => {
@@ -83,15 +95,17 @@ const Store = () => {
       <div className="w-full bg-gray-500 h-[90%] flex items-center justify-center">
         <div className="h-[99%] w-[99.5%]">
           <div className="h-[8%] w-full bg-gray-800 flex text-white">
-            <div className="w-[84%] flex items-center px-2 uppercase">
-              <p className="flex-[1.75]">Device_id</p>
-              <p className="flex-[1.75]">Send_To</p>
-              <p className="flex-[1.75]">District</p>
-              <p className="flex-[1.75]">Type</p>
-              <p className="flex-[1.75]">Issue_By</p>
-              <p className="flex-[1.75]">Sending Date</p>
+            <div className="w-[90%] flex items-center px-2 uppercase">
+              <p className="flex-[1.5]">Device_id</p>
+              <p className="flex-[1.5]">Model</p>
+              <p className="flex-[1.5]">Type</p>
+              <p className="flex-[1.5]">Issue_By</p>
+              <p className="flex-[1.5]">Where</p>
+              <p className="flex-[1.5]">District</p>
+              <p className="flex-[1.5]">Insert_Date</p>
+              <p className="flex-[1.5]">Sending Date</p>
             </div>
-            <div className="w-[15%]  flex items-center justify-center uppercase">
+            <div className="w-[10%]  flex items-center justify-center uppercase">
               Action
             </div>
           </div>

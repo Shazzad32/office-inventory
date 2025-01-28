@@ -5,6 +5,7 @@ import axios from "axios";
 import SoldTable from "./table/page";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import * as XLSX from "xlsx";
 
 const SoldPage = () => {
   const [state, setState] = useState({
@@ -13,7 +14,6 @@ const SoldPage = () => {
     searchItem: "",
     nextday: false,
     selectedDate: null,
-    open: false,
     startDate: "",
     endDate: "",
   });
@@ -22,7 +22,7 @@ const SoldPage = () => {
   }, []);
 
   const getData = () => {
-    axios.get("/api/retail").then((res) => {
+    axios.get("/api/devices").then((res) => {
       let data = res.data;
       let old = { ...state };
       old.datas = data;
@@ -31,7 +31,9 @@ const SoldPage = () => {
     });
   };
 
-  const soldDevice = state.datas.filter((item) => item.is_complete === true);
+  const soldDevice = state.datas.filter(
+    (item) => item.send_to === "Retail" && item.is_complete === true
+  );
 
   const handleSearch = (e) => {
     const searchTxt = e.target.value.toLowerCase();
@@ -105,6 +107,13 @@ const SoldPage = () => {
   const totalDevicePrice = state.datas.reduce((total, item) => {
     return total + Number(item.device_price || 0);
   }, 0);
+
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(soldDevice);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    XLSX.writeFile(workbook, "device_list.xlsx");
+  };
   return (
     <div className="h-[100%] w-full">
       <div className="h-[10%] w-full bg-gray-800 flex items-center px-4">
@@ -139,6 +148,12 @@ const SoldPage = () => {
               {totalDevicePrice}
             </span>
           </div>
+          <button
+            onClick={exportToExcel}
+            className="bg-green-600 text-white px-2 py-2 rounded"
+          >
+            Download
+          </button>
         </div>
 
         <div className="w-[50%] flex items-center justify-end gap-2">
@@ -179,9 +194,10 @@ const SoldPage = () => {
           <div className="h-[8%] w-full bg-gray-800 flex text-white">
             <div className="w-[84%] flex items-center px-2 uppercase">
               <p className="flex-[1.75]">Device_id</p>
-              <p className="flex-[1.75]">Send_To</p>
-              <p className="flex-[1.75]">District</p>
+              <p className="flex-[1.75]">Model</p>
               <p className="flex-[1.75]">Type</p>
+              <p className="flex-[1.75]">District</p>
+              <p className="flex-[1.75]">Where</p>
               <p className="flex-[1.75]">Issue_By</p>
               <p className="flex-[1.75]">Price</p>
             </div>

@@ -3,12 +3,12 @@ import DeviceStoreForm from "@/components/DeviceStoreForm";
 
 const defaultItem = {
   device_id: "",
-  from: "",
   device_model: "",
   device_type: "",
+  from: "",
   send_to: "",
   insert_date: "",
-  sending_date: "",
+  issue_by: "",
 };
 
 const AddService = () => {

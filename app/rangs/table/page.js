@@ -1,7 +1,3 @@
-import { FiEdit } from "react-icons/fi";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import Link from "next/link";
-
 const RetailTable = ({ item }) => {
   const formattedInsertDate = item?.insert_date
     ? new Date(item.insert_date).toLocaleDateString("en-GB").replace(/\//g, "-")

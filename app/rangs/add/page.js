@@ -1,5 +1,4 @@
 import React from "react";
-import DeviceStoreForm from "@/components/DeviceStoreForm";
 import DeviceRangsForm from "@/components/DeviceRangsForm";
 
 const defaultItem = {
@@ -8,7 +7,7 @@ const defaultItem = {
   device_type: "",
   Workshop: "",
   issue_by: "",
-  send_to: "",
+  send_to: "Rangs",
   from: "",
   insert_date: "",
   sending_date: "",

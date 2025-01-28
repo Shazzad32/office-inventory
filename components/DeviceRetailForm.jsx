@@ -13,9 +13,8 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
-import axios from "axios";
 import districtOptions from "@/data";
 
 const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
@@ -30,7 +29,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
   });
 
   const saveDevice = async () => {
-    const res = await fetch("/api/retail", {
+    const res = await fetch("/api/devices", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -41,12 +40,52 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
     if (res.ok) {
       router.push("/retail");
     } else {
-      throw new Error("Failed to save data");
+      const responseData = await res.json();
+      if (
+        responseData.error &&
+        responseData.error.includes("Device with this ID already exists")
+      ) {
+        alert(`Device with ID: ${item.device_id} already exists!`);
+      } else {
+        throw new Error(responseData.error || "Failed to save data");
+      }
     }
   };
 
+  // const updateDevice = async () => {
+  //   const res = await fetch(`/api/devices/${item._id}`, {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-type": "application/json",
+  //     },
+  //     body: JSON.stringify(item),
+  //   });
+
+  //   if (!res.ok) {
+  //     throw new Error("Failed to update topic");
+  //   }
+  //   router.push("/retail");
+  // };
+
+  // useEffect(() => {
+  //   getTechnician();
+  // }, []);
+
+  // const getTechnician = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       "https://jsonplaceholder.typicode.com/comments"
+  //     );
+  //     const data = res.data;
+  //     setState({ datas: data });
+  //   } catch (error) {
+  //     console.error("Error fetching technician data:", error.message);
+  //   }
+  // };
+
   const updateDevice = async () => {
-    const res = await fetch(`/api/retail/${item._id}`, {
+
+    const res = await fetch(`/api/devices/${item._id}`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -55,25 +94,10 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
     });
 
     if (!res.ok) {
-      throw new Error("Failed to update topic");
+      throw new Error("Failed to update device");
     }
+
     router.push("/retail");
-  };
-
-  useEffect(() => {
-    getTechnician();
-  }, []);
-
-  const getTechnician = async () => {
-    try {
-      const res = await axios.get(
-        "https://jsonplaceholder.typicode.com/comments"
-      );
-      const data = res.data;
-      setState({ datas: data });
-    } catch (error) {
-      console.error("Error fetching technician data:", error.message);
-    }
   };
 
   const handleChange = (event) => {
@@ -108,7 +132,28 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           label="Device Id"
           onChange={handleChange}
         />
-        <FormControl fullWidth>
+        <TextField
+          type="text"
+          name="device_model"
+          value={item.device_model || ""}
+          label="Device Model"
+          onChange={handleChange}
+        />
+        <TextField
+          type="text"
+          name="from"
+          value={item.from || ""}
+          label="From"
+          onChange={handleChange}
+        />
+        <TextField
+          type="text"
+          name="where"
+          value={item.where || ""}
+          label="Where"
+          onChange={handleChange}
+        />
+        {/* <FormControl fullWidth>
           <InputLabel>Send To</InputLabel>
           <Select
             type="text"
@@ -122,26 +167,30 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
 
-        <Autocomplete
-          fullWidth
-          options={districtOptions}
-          value={item.district || ""}
-          onChange={(e, newValue) =>
-            handleAutocompleteChange("district", newValue)
-          }
-          renderInput={(params) => (
-            <TextField {...params} label="District Name" />
-          )}
-        />
-        <TextField
+        {isUpdate && (
+          <Autocomplete
+            fullWidth
+            options={districtOptions}
+            value={item.district || ""}
+            onChange={(e, newValue) =>
+              handleAutocompleteChange("district", newValue)
+            }
+            renderInput={(params) => (
+              <TextField {...params} label="District Name" />
+            )}
+          />
+        )}
+
+        {isUpdate && <TextField
           type="text"
           name="issue_by"
           label="Issue By"
           value={item.issue_by || ""}
           onChange={handleChange}
-        />
+        />}
+        
         <FormControl fullWidth>
           <InputLabel>Device Type</InputLabel>
           <Select
@@ -155,7 +204,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           </Select>
         </FormControl>
 
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        {isUpdate && <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             className="w-[100%]"
             label="Sending Date"
@@ -171,7 +220,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
               });
             }}
           />
-        </LocalizationProvider>
+        </LocalizationProvider>}
         <div className="flex">
           <p className="lg:w-[25%] w-[40%] h-[40px] flex items-center">
             COMPLETE

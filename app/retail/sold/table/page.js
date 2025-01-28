@@ -1,5 +1,4 @@
 import { FiEdit } from "react-icons/fi";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Link from "next/link";
 
 const SoldTable = ({ item }) => {
@@ -16,13 +15,16 @@ const SoldTable = ({ item }) => {
           {item?.device_id}
         </p>
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
-          {item?.send_to}
+          {item?.device_model}
+        </p>
+        <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
+          {item?.device_type}
         </p>
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
           {item?.district}
         </p>
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
-          {item?.device_type}
+          {item?.where}
         </p>
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
           {item?.issue_by}

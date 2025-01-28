@@ -10,7 +10,7 @@ const StoreHome = () => {
   }, []);
 
   const getData = () => {
-    axios.get("/api/store").then((res) => {
+    axios.get("/api/devices").then((res) => {
       let data = res.data;
       let old = { ...state };
       old.datas = data;
@@ -18,13 +18,22 @@ const StoreHome = () => {
     });
   };
 
-  const totalDevice = state.datas.length;
+  const totalDevice = state.datas.filter(
+    (item) => item.send_to != "Retail" && item.send_to != "Rangs"
+  );
+
   const voiceDevice = state.datas.filter(
-    (item) => item.device_type === "Voice"
+    (item) =>
+      item.send_to != "Retail" &&
+      item.send_to != "Rangs" &&
+      item.device_type === "Voice"
   );
 
   const nonVoiceDevice = state.datas.filter(
-    (item) => item.device_type === "Non Voice"
+    (item) =>
+      item.send_to != "Retail" &&
+      item.send_to != "Rangs" &&
+      item.device_type === "Non Voice"
   );
 
   return (
@@ -33,7 +42,7 @@ const StoreHome = () => {
         href={"/store"}
         className="w-[90%] h-[33%] bg-rose-500 rounded-md flex items-center justify-center gap-4 text-white"
       >
-        Total Device<p className="text-2xl">{totalDevice}</p>
+        Total Device<p className="text-2xl">{totalDevice.length}</p>
       </Link>
       <div className="w-[90%] h-[33%] bg-rose-500 rounded-md flex items-center justify-center gap-4 text-white">
         VOice Device <p className="text-2xl">{voiceDevice.length}</p>

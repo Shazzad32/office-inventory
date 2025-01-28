@@ -12,9 +12,8 @@ const DeviceRangsForm = ({ defaultItem, isUpdate }) => {
   const [item, setItem] = useState({
     ...defaultItem,
   });
-
   const saveDevice = async () => {
-    const res = await fetch("/api/rangs", {
+    const res = await fetch("/api/devices", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -25,12 +24,20 @@ const DeviceRangsForm = ({ defaultItem, isUpdate }) => {
     if (res.ok) {
       router.push("/rangs");
     } else {
-      throw new Error("Failed to save data");
+      const responseData = await res.json();
+      if (
+        responseData.error &&
+        responseData.error.includes("Device with this ID already exists")
+      ) {
+        alert(`Device with ID: ${item.device_id} already exists!`);
+      } else {
+        throw new Error(responseData.error || "Failed to save data");
+      }
     }
   };
 
   const updateDevice = async () => {
-    const res = await fetch(`/api/rangs/${item._id}`, {
+    const res = await fetch(`/api/devices/${item._id}`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",

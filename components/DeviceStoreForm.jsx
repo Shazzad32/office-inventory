@@ -21,7 +21,7 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
   });
 
   const saveDevice = async () => {
-    const res = await fetch("/api/store", {
+    const res = await fetch("/api/devices", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -32,16 +32,56 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
     if (res.ok) {
       router.push("/store");
     } else {
-      throw new Error("Failed to save data");
+      const responseData = await res.json();
+      if (
+        responseData.error &&
+        responseData.error.includes("Device with this ID already exists")
+      ) {
+        alert(`Device with ID: ${item.device_id} already exists!`);
+      } else {
+        throw new Error(responseData.error || "Failed to save data");
+      }
     }
   };
 
+  // const saveDevice = async () => {
+  //   const res = await fetch("/api/devices", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-type": "application/json",
+  //     },
+  //     body: JSON.stringify(item),
+  //   });
+
+  //   if (res.ok) {
+  //     router.push("/store");
+  //   } else {
+  //     throw new Error("Failed to save data");
+  //   }
+  // };
+
+  // const saveDevice = async () => {
+  //   const res = await fetch("/api/devices", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-type": "application/json",
+  //     },
+  //     body: JSON.stringify(item),
+  //   });
+
+  //   if (res.ok) {
+  //     router.push("/store");
+  //   } else {
+  //     throw new Error("Failed to save data");
+  //   }
+  // };
+
   const updateDevice = async () => {
-    if (item.send_to) {
-      await handleTransfer();
-      return;
-    }
-    const res = await fetch(`/api/store/${item._id}`, {
+    // if (item.send_to) {
+    //   await handleTransfer();
+    //   return;
+    // }
+    const res = await fetch(`/api/devices/${item._id}`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -55,6 +95,14 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
 
     router.push("/store");
   };
+
+  // const handleChangeTwo = (event) => {
+  //   const { name, value } = event.target;
+  //   setItem((prevState) => ({
+  //     ...prevState,
+  //     [name]: value || (name === "insert_date" ? new Date().toISOString() : ""),
+  //   }));
+  // };
 
   const handleChangeTwo = (event) => {
     const { name, value } = event.target;
@@ -72,12 +120,12 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
     }));
   };
 
-  const handleTransfer = async () => {
+  const handleTransfer = async (sendTo) => {
     const endpoint =
-      item.send_to === "Retail"
-        ? "/api/retail"
-        : item.send_to === "Rangs"
-        ? "/api/rangs"
+      sendTo === "Retail"
+        ? "/api/devices?send_to=Retail"
+        : sendTo === "Rangs"
+        ? "/api/devices?send_to=Rangs"
         : null;
 
     if (!endpoint) {
@@ -99,7 +147,7 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
         throw new Error(`Failed to transfer product: ${errorText}`);
       }
 
-      const deleteRes = await fetch(`/api/store/${item._id}`, {
+      const deleteRes = await fetch(`/api/devices/${item._id}`, {
         method: "DELETE",
       });
 
@@ -126,7 +174,6 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
           label="Device Id"
           onChange={handleChange}
         />
-
         <TextField
           type="text"
           name="from"
@@ -141,7 +188,6 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
           label="Device Model"
           onChange={handleChange}
         />
-
         {isUpdate && (
           <FormControl fullWidth>
             <InputLabel>Send To</InputLabel>
@@ -155,6 +201,15 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
               <MenuItem value="Rangs">Rangs</MenuItem>
             </Select>
           </FormControl>
+        )}{" "}
+        {isUpdate && (
+          <TextField
+            type="text"
+            name="issue_by"
+            value={item.issue_by || ""}
+            label="Issue By"
+            onChange={handleChange}
+          />
         )}
         <FormControl fullWidth>
           <InputLabel>Device Type</InputLabel>
@@ -168,7 +223,6 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
             <MenuItem value="Non Voice">Non Voice</MenuItem>
           </Select>
         </FormControl>
-
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             fullwide
@@ -186,8 +240,8 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
           />
         </LocalizationProvider>
       </div>
-      <div className="flex w-full justify-end">
-        <Button variant="outlined" className="mr-4">
+      <div className="flex w-full justify-end gap-2 ">
+        <Button variant="outlined">
           <Link href="/store">Cancel</Link>
         </Button>
         <Button

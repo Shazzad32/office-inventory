@@ -19,14 +19,19 @@ const Store = () => {
   }, []);
 
   const getData = () => {
-    axios.get("/api/store").then((res) => {
+    axios.get("/api/devices").then((res) => {
       let data = res.data;
+      console.log("tttt", data);
       let old = { ...state };
       old.datas = data;
       old.dataResults = data;
       setState(old);
     });
   };
+
+  const currentDevice = state.datas.filter(
+    (item) => item.send_to != "Rangs" && item.send_to != "Retail"
+  );
 
   const totalDevice = state.datas.length;
 
@@ -66,7 +71,7 @@ const Store = () => {
           <div className="bg-white px-2 rounded-md flex items-center">
             Total Device :{" "}
             <span className="text-xl font-bold text-orange-500 ml-1">
-              {totalDevice}
+              {currentDevice.length}
             </span>
           </div>
           <input
@@ -93,7 +98,7 @@ const Store = () => {
             </div>
           </div>
           <div className="h-[92%] w-full overflow-auto bg-white">
-            {state.datas.map((item, i) => (
+            {currentDevice.map((item, i) => (
               <div
                 key={i}
                 className={`${i % 2 === 0 ? "bg-gray-200" : "bg-gray-300"}`}

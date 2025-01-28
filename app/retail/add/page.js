@@ -3,12 +3,14 @@ import DeviceRetailForm from "@/components/DeviceRetailForm";
 
 const defaultItem = {
   device_id: "",
-  send_to: "",
+  send_to: "Retail",
   district: "",
+  where: "Office",
   issue_by: "",
   sending_date: "",
   install_date: "",
   device_type: "",
+  device_model: "",
   device_price: "",
 };
 

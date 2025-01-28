@@ -19,7 +19,7 @@ const Store = () => {
   }, []);
 
   const getData = () => {
-    axios.get("/api/rangs").then((res) => {
+    axios.get("/api/devices?send_to=Rangs").then((res) => {
       let data = res.data;
       let old = { ...state };
       old.datas = data;
