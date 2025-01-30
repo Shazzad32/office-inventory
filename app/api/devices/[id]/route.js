@@ -25,36 +25,34 @@ export const PUT = async (req, { params }) => {
 
     const {
       device_id,
+      send_to,
+      from,
+      district,
       device_type,
       device_model,
-      device_price,
-      from,
-      send_to,
-      district,
-      workshop,
       issue_by,
       sending_date,
       install_date,
+      device_price,
       is_complete,
       insert_date,
+      workshop,
     } = await req.json();
 
     const newDevice = await Devices.findOne({ _id: id });
     newDevice.device_id = device_id;
     (newDevice.send_to = send_to),
-    (newDevice.district = district),
-    (newDevice.device_type = device_type),
-    (newDevice.device_model = device_model),
-    (newDevice. where =  where);
-    (newDevice.issue_by = issue_by),
-    (newDevice.sending_date = sending_date),
-    (newDevice.install_date = install_date),
-    (newDevice.device_price = device_price),
-    (newDevice.is_complete = is_complete);
+      (newDevice.district = district),
+      (newDevice.device_type = device_type),
+      (newDevice.device_model = device_model),
+      (newDevice.issue_by = issue_by),
+      (newDevice.workshop = workshop),
+      (newDevice.sending_date = sending_date),
+      (newDevice.install_date = install_date),
+      (newDevice.device_price = device_price),
+      (newDevice.is_complete = is_complete);
     newDevice.from = from;
-    newDevice.workshop = workshop;
     newDevice.insert_date = insert_date;
-   
 
     await newDevice.save();
 
