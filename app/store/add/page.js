@@ -6,7 +6,6 @@ const defaultItem = {
   device_model: "",
   device_type: "",
   from: "",
-  send_to: "",
   insert_date: "",
   issue_by: "",
 };

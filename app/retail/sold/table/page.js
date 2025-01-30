@@ -24,9 +24,6 @@ const SoldTable = ({ item }) => {
           {item?.district}
         </p>
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
-          {item?.where}
-        </p>
-        <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
           {item?.issue_by}
         </p>
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">

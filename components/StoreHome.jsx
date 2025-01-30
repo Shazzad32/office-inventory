@@ -1,54 +1,36 @@
 "use client";
-import axios from "axios";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-const StoreHome = () => {
-  const [state, setState] = useState({ datas: [] });
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = () => {
-    axios.get("/api/devices").then((res) => {
-      let data = res.data;
-      let old = { ...state };
-      old.datas = data;
-      setState(old);
-    });
-  };
-
-  const totalDevice = state.datas.filter(
-    (item) => item.send_to != "Retail" && item.send_to != "Rangs"
-  );
-
-  const voiceDevice = state.datas.filter(
-    (item) =>
-      item.send_to != "Retail" &&
-      item.send_to != "Rangs" &&
-      item.device_type === "Voice"
-  );
-
-  const nonVoiceDevice = state.datas.filter(
-    (item) =>
-      item.send_to != "Retail" &&
-      item.send_to != "Rangs" &&
-      item.device_type === "Non Voice"
-  );
-
+const StoreHome = ({ totalDevices, voiceDevices, nonVoiceDevices }) => {
   return (
-    <div className="h-[95%] w-full p-4 flex flex-col gap-4 items-center justify-evenly">
+    <div className="h-[98%] w-full p-4 flex flex-col gap-4 items-center justify-evenly">
       <Link
         href={"/store"}
-        className="w-[90%] h-[33%] bg-rose-500 rounded-md flex items-center justify-center gap-4 text-white"
+        className="w-[95%] h-[33%] bg-rose-500 rounded-md hidden lg:flex items-center justify-center gap-2 text-white"
       >
-        Total Device<p className="text-2xl">{totalDevice.length}</p>
+        Total Device<p className="text-2xl">{totalDevices}</p>
       </Link>
-      <div className="w-[90%] h-[33%] bg-rose-500 rounded-md flex items-center justify-center gap-4 text-white">
-        VOice Device <p className="text-2xl">{voiceDevice.length}</p>
+      <div className="hidden w-[98%] h-[33%] bg-rose-500 rounded-md lg:flex items-center justify-center gap-2 text-white">
+        VOice Device <p className="text-2xl">{voiceDevices}</p>
       </div>
-      <div className="w-[90%] h-[33%] bg-rose-500 rounded-md flex items-center justify-center gap-4 text-white">
-        Non VOice Device <p className="text-2xl">{nonVoiceDevice.length}</p>
+      <div className="w-[98%] h-[33%] bg-rose-500 rounded-md hidden lg:flex items-center justify-center gap-2 text-white">
+        Non VOice Device <p className="text-2xl">{nonVoiceDevices}</p>
+      </div>
+      <div className="h-[99%] w-[95%] lg:hidden flex flex-col gap-2">
+        <div className="flex-[5] bg-orange-400 text-sm gap-3 flex flex-col items-start justify-center align-left rounded-md">
+          <div className="text-sm ml-3 bg-white">
+            Total Device:
+            <span className="text-orange-400 text-xl">{totalDevices}</span>
+          </div>
+          <div className="text-sm ml-3 bg-white">
+            Voice Device:{voiceDevices}
+          </div>
+          <div className="text-sm ml-3 bg-white">
+            Non Voice Device:{nonVoiceDevices}
+          </div>
+        </div>
+        <div className="flex-[5] bg-orange-600"></div>
       </div>
     </div>
   );

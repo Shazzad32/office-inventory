@@ -1,79 +1,38 @@
 "use client";
-import axios from "axios";
+import { calculateAmount } from "@/utils/utils";
 import Link from "next/link";
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 
-const RetailHome = (props) => {
-  const [state, setState] = useState({ datas: [] });
+const RetailHome = ({ totalInRetail }) => {
+  const [selectedDate, setSelectedDate] = useState("");
 
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toLocaleDateString("en-CA", {
-      timeZone: "Asia/Dhaka",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    })
-  );
+  const filteredSales = Array.isArray(totalInRetail)
+    ? totalInRetail.filter((item) => {
+        if (item.install_date) {
+          const itemDate = new Date(item.install_date).toLocaleDateString(
+            "en-CA",
+            {
+              timeZone: "Asia/Dhaka",
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }
+          );
+          return itemDate === selectedDate && item.is_complete === true;
+        }
+        return false;
+      })
+    : [];
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = () => {
-    axios.get("/api/devices").then((res) => {
-      let data = res.data;
-      let old = { ...state };
-      old.datas = data;
-      setState(old);
-    });
-  };
-
-  
-
-  const totalStockInRetail = state.datas.filter(
-    (item) =>item.send_to === "Retail" && item.is_complete === false
-  );
-
-  const totalSell = state.datas.filter((item) => item.is_complete === true);
-
-  const unSoldDevice = totalStockInRetail - totalSell;
-
-  const voiceDevice = state.datas.filter(
-    (item) =>item.send_to === "Retail" && item.device_type === "Voice" && item.is_complete === false
-  );
-
-  const nonVoiceDevice = state.datas.filter(
-    (item) =>item.send_to === "Retail" && item.device_type === "Non Voice" && item.is_complete === false
-  );
-
-  const totalDevicePrice = state.datas.reduce((total, item) => {
+  const totalDevicePrice = filteredSales.reduce((total, item) => {
     return total + Number(item.device_price || 0);
   }, 0);
-
-  const filteredSales = state.datas.filter((item) => {
-    if (item.install_date) {
-      const itemDate = new Date(item.install_date).toLocaleDateString("en-CA", {
-        timeZone: "Asia/Dhaka",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
-      return itemDate === selectedDate && item.is_complete === true;
-    }
-    return false;
-  });
 
   const totalCompleteDevices = filteredSales.length;
-
-  const filteredSalesAmount = filteredSales.reduce((total, item) => {
-    return total + Number(item.device_price || 0);
-  }, 0);
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
   };
-
-  // const totalSell =
 
   return (
     <div className="h-[95%] w-full p-4 flex flex-col gap-4 items-center justify-evenly">
@@ -82,7 +41,10 @@ const RetailHome = (props) => {
         className="w-[90%] h-[33%] bg-purple-500 rounded-md flex flex-col text-left p-4 "
       >
         <p className="text-center text-white uppercase">
-          Un Sold Device = <span>{totalStockInRetail.length}</span>
+          Un Sold Device ={" "}
+          <span>
+            {totalInRetail.filter((x) => (x.is_complete === false)).length}
+          </span>
         </p>
 
         <div className="flex gap-2">
@@ -90,13 +52,16 @@ const RetailHome = (props) => {
           <div className="bg-white px-2 py-1 rounded-md flex items-center mt-2 w-[50%]">
             Voice :{" "}
             <span className="text-xl font-bold text-orange-500 ml-1">
-              {voiceDevice.length}
+              {totalInRetail.filter((x) =>x.is_complete === false && x.device_type === "Voice").length}
             </span>
           </div>
           <div className="bg-white px-2 py-1 rounded-md flex items-center mt-2 w-[50%] ">
             Non Voice :{" "}
             <span className="text-xl font-bold text-orange-500 ml-1">
-              {nonVoiceDevice.length}
+              {
+                totalInRetail.filter((x) =>x.is_complete === false && x.device_type === "Non_Voice")
+                  .length
+              }
             </span>
           </div>
         </div>
@@ -111,7 +76,7 @@ const RetailHome = (props) => {
             onChange={handleDateChange}
             className="bg-white p-1 rounded-md"
           />
-        </div>
+        </div>{" "}
         <div className="flex gap-4">
           <p className="text-sm bg-white w-[50%] px-2 py-2 mt-2 rounded-md">
             Today Sell:
@@ -119,7 +84,7 @@ const RetailHome = (props) => {
           </p>
           <p className="text-sm bg-white w-[50%] px-2 py-2 mt-2 rounded-md">
             Amount:
-            <span className="text-red-600 ml-2">{filteredSalesAmount}</span>
+            <span className="text-red-600 ml-2">{totalDevicePrice}</span>
           </p>
         </div>
       </div>
@@ -130,14 +95,14 @@ const RetailHome = (props) => {
         <div className="bg-white px-2 py-1 rounded-md flex items-center mt-2 w-[70%] ">
           Sold Device :{" "}
           <span className="text-xl font-bold text-orange-500 ml-1">
-            {totalSell.length}
+            {totalInRetail.filter((x) => x.is_complete).length}
           </span>
         </div>
 
         <div className="bg-white px-2 py-1 rounded-md flex items-center mt-2 w-[70%]">
           Total Amount :{" "}
           <span className="text-xl font-bold text-orange-500 ml-1">
-            {totalDevicePrice}
+            {calculateAmount(totalInRetail.filter((x) => x.is_complete))}
           </span>
         </div>
       </Link>

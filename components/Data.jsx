@@ -1,30 +1,19 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-const Data = () => {
-  const [state, setState] = useState({ datas: [] });
-  useEffect(() => {
-    getData();
-  }, []);
+const Data = async () => {
 
-  const getData = () => {
-    axios
-      .get("https://servicecheckapp.vercel.app/api/technician/")
-      .then((res) => {
-        let data = res.data;
-        console.log("technician name=", data);
-        let old = { ...state };
-        old.datas = data;
-        setState(old);
-      });
-  };
+  const techniciansRes = await fetch(
+    "https://servicecheckapp.vercel.app/api/technician"
+  );
+
+  const technicians = await techniciansRes.json()
 
   return (
     <div>
-      {state.datas.map((item, i) => {
+      {technicians.map((item, i) => {
         return (
           <div>
-            <p>{item.title}</p>
+            <p>{item.technician_name}</p>
           </div>
         );
       })}

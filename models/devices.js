@@ -4,19 +4,17 @@ const Schema = mongoose.Schema;
 const devicesSchema = new Schema({
   device_id: { type: String },
   device_model: { type: String },
-  device_type: { type: String },
+  device_type: { type: String,enum: ["Voice", "Non_Voice"] },
   from: { type: String },
-  send_to: { type: String, enum: ["Store", "Rangs", "Retail"], required: true },
+  send_to: { type: String, enum: ["Retail", "Rangs", "Store"], default:"Store" },
   issue_by: { type: String },
-  where: { type: String, default: "Office" },
   workshop: { type: String },
   district: { type: String },
-  device_price: { type: String },
+  device_price: { type: Number },
   insert_date: { type: Date, default: Date.now },
-  sending_date: { type: Date },
   install_date: { type: Date, default: Date.now },
+  sending_date: { type: Date },
   is_complete: { type: Boolean, default: false },
-  is_send: { type: Boolean, default: false },
 });
 
 devicesSchema.index({ device_id: 1 });
@@ -32,25 +30,3 @@ devicesSchema.pre("save", function (next) {
 
 module.exports =
   mongoose.models.Devices || mongoose.model("Devices", devicesSchema);
-
-// const mongoose = require("mongoose");
-// const Schema = mongoose.Schema;
-
-// const devicesSchema = new Schema({
-//   device_id: { type: String, required: true },
-//   device_model: { type: String },
-//   device_type: { type: String },
-//   from: { type: String },
-//   send_to: { type: String }, //, enum: ["Store", "Rangs", "Retail"], required: true
-//   issue_by: { type: String },
-//   insert_date: { type: Date, default: Date.now },
-//   sending_date: { type: Date },
-//   install_date: { type: Date },
-//   is_complete: { type: Boolean, default: false },
-//   is_send: { type: Boolean, default: false },
-// });
-
-// devicesSchema.index({ device_id: 1 }); // Ensure device_id is unique for querying
-
-// module.exports =
-//   mongoose.models.Devices || mongoose.model("Devices", devicesSchema);

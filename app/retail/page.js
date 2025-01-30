@@ -18,29 +18,32 @@ const Store = () => {
     getData();
   }, []);
 
-  // const getData = () => {
-  //   axios.get("/api/devices?send_to=Rangs").then((res) => {
-  //     let data = res.data;
-  //     let old = { ...state };
-  //     old.datas = data;
-  //     old.dataResults = data;
-  //     setState(old);
-  //   });
-  // };
-  const getData = async () => {
-    try {
-      const res = await axios.get("/api/devices?send_to=Retail");
-      const data = res.data;
-      setState((prevState) => ({
-        ...prevState,
-        datas: data,
-        dataResults: data,
-      }));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+  const getData = () => {
+    axios.get("/api/devices/retail").then((res) => {
+      let data = res.data;
+      let old = { ...state };
+      console.log("data in retail ", data);
+      old.datas = data;
+      old.dataResults = data;
+      setState(old);
+    });
   };
-  const noSoldDevice = state.datas.filter((item) => item.is_complete === false);
+  // const getData = async () => {
+  //   try {
+  //     const res = await axios.get("/api/devices");
+  //     const data = res.data;
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       datas: data,
+  //       dataResults: data,
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+  const unSoldDevice = state.datas.filter(
+    (item) => item.send_to === "Retail" && item.is_complete === false
+  );
 
   const handleSearch = (e) => {
     const searchTxt = e.target.value.toLowerCase();
@@ -70,6 +73,9 @@ const Store = () => {
           <button className="text-[8px] h-[20px] w-[40px] lg:w-[60px] bg-orange-400 lg:bg-transparent px-1 lg:text-[16px] lg:border-2 lg:h-[30px] lg:p-4 rounded-md flex items-center justify-center text-white">
             <Link href={"/retail/add"}>ADD</Link>
           </button>
+          <button className="text-[8px] h-[20px] w-[40px] lg:w-[60px] bg-orange-400 lg:bg-transparent px-1 lg:text-[16px] lg:border-2 lg:h-[30px] lg:p-4 rounded-md flex items-center justify-center text-white">
+            <Link href={"/retail/sold"}>SOLD</Link>
+          </button>
           <ImportFile />
         </div>
         <div className="w-[40%] flex justify-center">
@@ -80,7 +86,7 @@ const Store = () => {
           <div className="bg-white px-2 rounded-md flex items-center">
             Total Device :{" "}
             <span className="text-xl font-bold text-orange-500 ml-1">
-              {noSoldDevice.length}
+              {unSoldDevice.length}
             </span>
           </div>
           <input
@@ -100,7 +106,6 @@ const Store = () => {
               <p className="flex-[1.5]">Model</p>
               <p className="flex-[1.5]">Type</p>
               <p className="flex-[1.5]">Issue_By</p>
-              <p className="flex-[1.5]">Where</p>
               <p className="flex-[1.5]">District</p>
               <p className="flex-[1.5]">Insert_Date</p>
               <p className="flex-[1.5]">Sending Date</p>
@@ -110,7 +115,7 @@ const Store = () => {
             </div>
           </div>
           <div className="h-[92%] overflow-auto bg-white">
-            {noSoldDevice.map((item, i) => (
+            {unSoldDevice.map((item, i) => (
               <div
                 key={i}
                 className={`${i % 2 === 0 ? "bg-gray-200" : "bg-gray-300"}`}

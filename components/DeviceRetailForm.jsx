@@ -17,7 +17,7 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 import districtOptions from "@/data";
 
-const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
+const DeviceRetailForm = ({ defaultItem, isUpdate, technicians }) => {
   const [state, setState] = useState({
     datas: [],
   });
@@ -27,6 +27,28 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
   const [item, setItem] = useState({
     ...defaultItem,
   });
+
+  const [errors, setErrors] = useState({
+    device_price: "",
+  });
+
+  const validateFields = () => {
+    let newErrors = { device_price: "" };
+
+    if (item.is_complete) {
+      const price = parseFloat(item.device_price);
+      if (isNaN(price) || price < 2500 || price > 9999) {
+        newErrors.device_price = "Device Price must be between 2500 and 9999";
+      }
+    }
+
+    if (!item.device_price) {
+      newErrors.device_price = "Price required";
+    }
+
+    setErrors(newErrors);
+    return Object.values(newErrors).every((error) => error === "");
+  };
 
   const saveDevice = async () => {
     const res = await fetch("/api/devices", {
@@ -84,6 +106,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
   // };
 
   const updateDevice = async () => {
+    if (!validateFields()) return;
 
     const res = await fetch(`/api/devices/${item._id}`, {
       method: "PUT",
@@ -131,28 +154,27 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           value={item.device_id || ""}
           label="Device Id"
           onChange={handleChange}
+          disabled={isUpdate}
         />
-        <TextField
-          type="text"
-          name="device_model"
-          value={item.device_model || ""}
-          label="Device Model"
-          onChange={handleChange}
-        />
-        <TextField
-          type="text"
-          name="from"
-          value={item.from || ""}
-          label="From"
-          onChange={handleChange}
-        />
-        <TextField
-          type="text"
-          name="where"
-          value={item.where || ""}
-          label="Where"
-          onChange={handleChange}
-        />
+        {!isUpdate && (
+          <>
+            <TextField
+              type="text"
+              name="device_model"
+              value={item.device_model || ""}
+              label="Device Model"
+              onChange={handleChange}
+            />
+            <TextField
+              type="text"
+              name="from"
+              value={item.from || ""}
+              label="From"
+              onChange={handleChange}
+            />
+          </>
+        )}
+
         {/* <FormControl fullWidth>
           <InputLabel>Send To</InputLabel>
           <Select
@@ -169,7 +191,7 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           </Select>
         </FormControl> */}
 
-        {isUpdate && (
+        {/* {isUpdate && (
           <Autocomplete
             fullWidth
             options={districtOptions}
@@ -183,14 +205,16 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           />
         )}
 
-        {isUpdate && <TextField
-          type="text"
-          name="issue_by"
-          label="Issue By"
-          value={item.issue_by || ""}
-          onChange={handleChange}
-        />}
-        
+        {isUpdate && (
+          <TextField
+            type="text"
+            name="issue_by"
+            label="Issue By"
+            value={item.issue_by || ""}
+            onChange={handleChange}
+          />
+        )} */}
+
         <FormControl fullWidth>
           <InputLabel>Device Type</InputLabel>
           <Select
@@ -198,29 +222,32 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
             name="device_type"
             value={item.device_type || ""}
             onChange={handleChange}
+            disabled={isUpdate}
           >
             <MenuItem value="Voice">Voice</MenuItem>
-            <MenuItem value="Non Voice">Non Voice</MenuItem>
+            <MenuItem value="Non_Voice">Non_Voice</MenuItem>
           </Select>
         </FormControl>
 
-        {isUpdate && <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            className="w-[100%]"
-            label="Sending Date"
-            type="date"
-            name="sending_date"
-            value={item.sending_date ? dayjs(item.sending_date) : null}
-            onChange={(newValue) => {
-              handleChange({
-                target: {
-                  name: "sending_date",
-                  value: newValue ? newValue.toISOString() : "", // Use ISO format
-                },
-              });
-            }}
-          />
-        </LocalizationProvider>}
+        {!isUpdate && (
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              className="w-[100%]"
+              label="Sending Date"
+              type="date"
+              name="sending_date"
+              value={item.sending_date ? dayjs(item.sending_date) : null}
+              onChange={(newValue) => {
+                handleChange({
+                  target: {
+                    name: "sending_date",
+                    value: newValue ? newValue.toISOString() : "", // Use ISO format
+                  },
+                });
+              }}
+            />
+          </LocalizationProvider>
+        )}
         <div className="flex">
           <p className="lg:w-[25%] w-[40%] h-[40px] flex items-center">
             COMPLETE
@@ -237,11 +264,13 @@ const DeviceRetailForm = ({ defaultItem, isUpdate }) => {
           {item.is_complete && (
             <div className="flex">
               <TextField
-                type="text"
+                type="number"
                 label="Device Price"
                 name="device_price"
                 value={item.device_price || ""}
                 onChange={handleChange}
+                error={!!errors.device_price}
+                helperText={errors.device_price}
               />
             </div>
           )}

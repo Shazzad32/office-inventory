@@ -174,7 +174,7 @@ const SoldPage = () => {
             </div>
           </LocalizationProvider>
 
-          <div className="bg-white px-2 py-2 rounded-md flex items-center">
+          <div className="bg-white p-1 lg:px-2 lg:py-2 rounded-md flex items-center">
             Sold :{" "}
             <span className="text-xl font-bold text-orange-500 ml-1">
               {soldDevice.length}
@@ -192,13 +192,12 @@ const SoldPage = () => {
       <div className="w-full bg-gray-500 h-[90%] flex items-center justify-center">
         <div className="h-[99%] w-[99.5%]">
           <div className="h-[8%] w-full bg-gray-800 flex text-white">
-            <div className="w-[84%] flex items-center px-2 uppercase">
+            <div className="hidden w-[84%] lg:flex items-center px-2 uppercase">
               <p className="flex-[1.75]">Device_id</p>
               <p className="flex-[1.75]">Model</p>
               <p className="flex-[1.75]">Type</p>
               <p className="flex-[1.75]">District</p>
-              <p className="flex-[1.75]">Where</p>
-              <p className="flex-[1.75]">Issue_By</p>
+              <p className="flex-[1.75]">Issue_To</p>
               <p className="flex-[1.75]">Price</p>
             </div>
             <div className="w-[15%]  flex items-center justify-center uppercase">
