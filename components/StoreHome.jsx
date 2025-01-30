@@ -9,13 +9,13 @@ const StoreHome = ({ totalDevices, voiceDevices, nonVoiceDevices }) => {
         href={"/store"}
         className="w-[95%] h-[33%] bg-rose-500 rounded-md hidden lg:flex items-center justify-center gap-2 text-white"
       >
-        Total Device<p className="text-2xl">{totalDevices}</p>
+        Total Device :<p className="text-2xl">{totalDevices}</p>
       </Link>
       <div className="hidden w-[98%] h-[33%] bg-rose-500 rounded-md lg:flex items-center justify-center gap-2 text-white">
-        VOice Device <p className="text-2xl">{voiceDevices}</p>
+        VOice Device :<p className="text-2xl">{voiceDevices}</p>
       </div>
       <div className="w-[98%] h-[33%] bg-rose-500 rounded-md hidden lg:flex items-center justify-center gap-2 text-white">
-        Non VOice Device <p className="text-2xl">{nonVoiceDevices}</p>
+        Non VOice Device :<p className="text-2xl">{nonVoiceDevices}</p>
       </div>
       <div className="h-[99%] w-[95%] lg:hidden flex flex-col gap-2">
         <div className="flex-[5] bg-orange-400 text-sm gap-3 flex flex-col items-start justify-center align-left rounded-md">

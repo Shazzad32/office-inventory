@@ -23,8 +23,10 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
     ...defaultItem,
   });
 
-  const [tech, setTech] = useState({ ...technicians });
-  console.log("tech", tech);
+  // const [tech, setTech] = useState({ ...technicians });
+  // console.log("tech", tech);
+
+  const tech = ({...technicians})
 
   const [errors, setErrors] = useState({
     issue_by: "",
@@ -33,15 +35,16 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
 
   const validateFields = () => {
     let newErrors = { issue_by: "", district: "" };
-
-    if (!item.issue_by) {
-      newErrors.issue_by = "Issue By is required";
+  
+    // Apply validation only if send_to is "Retail"
+    if (item.send_to === "Retail") {
+      if (!item.issue_by) {
+        newErrors.issue_by = "Issue By is required";
+      }
+      if (!item.district) {
+        newErrors.district = "District Name is required";
+      }
     }
-
-    if (!item.district) {
-      newErrors.district = "District Name is required";
-    }
-
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
   };
@@ -63,21 +66,28 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
     }
   };
 
+
   const updateDevice = async () => {
-    if (!validateFields()) return;
-
-    const res = await fetch(`/api/devices/${item._id}`, {
-      method: "PUT",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(item),
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to update device");
+    if (!validateFields()) return; // Only validate if needed
+  
+    try {
+      const res = await fetch(`/api/devices/${item._id}`, {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(item),
+      });
+  
+      if (!res.ok) {
+        throw new Error("Failed to update device");
+      }
+  
+      router.push("/store");
+    } catch (error) {
+      console.error("Update failed:", error);
+      alert("Failed to update device");
     }
-
-    router.push("/store");
   };
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
