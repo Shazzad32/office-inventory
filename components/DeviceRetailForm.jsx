@@ -37,8 +37,8 @@ const DeviceRetailForm = ({ defaultItem, isUpdate, technicians }) => {
 
     if (item.is_complete) {
       const price = parseFloat(item.device_price);
-      if (isNaN(price) || price < 2500 || price > 9999) {
-        newErrors.device_price = "Device Price must be between 2500 and 9999";
+      if (isNaN(price) || price < 2500 || price > 7000) {
+        newErrors.device_price = "Device Price must be between 2500 and 7000";
       }
     }
 

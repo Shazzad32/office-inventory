@@ -25,18 +25,18 @@ export const PUT = async (req, { params }) => {
 
     const {
       device_id,
-      send_to,
-      from,
-      district,
       device_type,
       device_model,
+      device_price,
+      from,
+      send_to,
+      district,
+      workshop,
       issue_by,
       sending_date,
       install_date,
-      device_price,
       is_complete,
       insert_date,
-      where,
     } = await req.json();
 
     const newDevice = await Devices.findOne({ _id: id });
@@ -52,6 +52,7 @@ export const PUT = async (req, { params }) => {
     (newDevice.device_price = device_price),
     (newDevice.is_complete = is_complete);
     newDevice.from = from;
+    newDevice.workshop = workshop;
     newDevice.insert_date = insert_date;
    
 
