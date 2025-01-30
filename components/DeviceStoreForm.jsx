@@ -3,6 +3,7 @@ import {
   Autocomplete,
   Button,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -16,11 +17,14 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 import districtOptions from "@/data";
 
-const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
+const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
   const router = useRouter();
   const [item, setItem] = useState({
     ...defaultItem,
   });
+
+  const [tech, setTech] = useState({ ...technicians });
+  console.log("tech", tech);
 
   const [errors, setErrors] = useState({
     issue_by: "",
@@ -134,7 +138,6 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
           </Select>
         </FormControl>
 
-        {/* Send To (Only Show in Update Mode) */}
         {isUpdate && (
           <FormControl fullWidth>
             <InputLabel>Send To</InputLabel>
@@ -151,32 +154,42 @@ const DeviceStoreForm = ({ defaultItem, isUpdate }) => {
         )}
         {isUpdate && item.send_to === "Retail" && (
           <div className="w-full flex gap-2">
-            <TextField
-              className="w-[50%]"
-              type="text"
-              name="issue_by"
-              value={item.issue_by || ""}
-              label="Issue To"
-              onChange={handleChange}
-              error={!!errors.issue_by}
-              helperText={errors.issue_by}
-            />
-            <Autocomplete
-              className="w-[50%]"
-              options={districtOptions}
-              value={item.district || ""}
-              onChange={(e, newValue) =>
-                handleAutocompleteChange("district", newValue)
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="District Name"
-                  error={!!errors.district}
-                  helperText={errors.district}
-                />
+            <FormControl className="w-[50%]" error={!!errors.issue_by}>
+              <InputLabel>Issue To</InputLabel>
+              <Select
+                type="text"
+                name="issue_by"
+                value={item.issue_by || ""}
+                onChange={handleChange}
+              >
+                {technicians.map((tech, i) => (
+                  <MenuItem key={i} value={tech.tech_name}>
+                    {tech.tech_name}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.issue_by && (
+                <FormHelperText>{errors.issue_by}</FormHelperText>
               )}
-            />
+            </FormControl>
+            <FormControl className="w-[50%]" error={!!errors.district}>
+              <InputLabel>District</InputLabel>
+              <Select
+                type="text"
+                name="district"
+                value={item.district || ""}
+                onChange={handleChange}
+              >
+                {technicians.map((tech, i) => (
+                  <MenuItem key={i} value={tech.district}>
+                    {tech.district}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.district && (
+                <FormHelperText>{errors.district}</FormHelperText>
+              )}
+            </FormControl>
           </div>
         )}
 
