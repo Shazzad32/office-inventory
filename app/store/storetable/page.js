@@ -48,9 +48,12 @@ const StoreTable = ({ item }) => {
         </p>
       </div>
       <div className="flex flex-col items-center justify-center  gap-6 w-[15%] lg:w-[15%] lg:mt-0 lg:flex lg:flex-row lg:gap-12">
-        <Link href={`/store/${item?._id}/update`}>
-          <FiEdit className="text-black" />
-        </Link>
+
+        {item?._id && (
+          <Link href={`/store/${item._id}/update`}>
+            <FiEdit className="text-black" />
+          </Link>
+        )}
         {/* <Link href={`/store/${item?._id}/delete`}>
           <DeleteForeverIcon className="text-red-700" />
         </Link> */}

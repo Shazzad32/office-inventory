@@ -60,9 +60,15 @@ const RetailTable = ({ item }) => {
           </>
         ) : (
           <>
-            <Link href={`/retail/${item?._id}/update`}>
+            {/* <Link href={`/retail/${item?._id}/update`}>
               <FiEdit className="text-black" />
-            </Link>
+            </Link> */}
+
+            {item?._id && (
+              <Link href={`/retail/${item._id}/update`}>
+                <FiEdit className="text-black" />
+              </Link>
+            )}
           </>
         )}
       </div>

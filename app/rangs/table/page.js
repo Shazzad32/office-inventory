@@ -27,10 +27,6 @@ const RetailTable = ({ item }) => {
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
           {item?.send_to}
         </p>
-
-        <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
-          {item?.issue_by}
-        </p>
         <p className="flex-[1.75] overflow-hidden text-ellipsis whitespace-nowrap">
           {formattedInsertDate}
         </p>

@@ -1,5 +1,5 @@
 import React from "react";
-import DeviceStoreForm from "@/components/DeviceStoreForm";
+import DeviceStoreForm from "@/components/DeviceStoreFormOld";
 
 const defaultItem = {
   device_id: "",

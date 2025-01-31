@@ -5,14 +5,13 @@ import axios from "axios";
 import ImportFile from "@/components/ImportFile";
 import RetailTable from "./table/page";
 
-const Store = () => {
+const Retail = () => {
   const [state, setState] = useState({
     datas: [],
     dataResults: "",
     searchItem: "",
     nextday: false,
     selectedDate: null,
-    open: false,
   });
   useEffect(() => {
     getData();
@@ -28,19 +27,7 @@ const Store = () => {
       setState(old);
     });
   };
-  // const getData = async () => {
-  //   try {
-  //     const res = await axios.get("/api/devices");
-  //     const data = res.data;
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       datas: data,
-  //       dataResults: data,
-  //     }));
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
+
   const unSoldDevice = state.datas.filter(
     (item) => item.send_to === "Retail" && item.is_complete === false
   );
@@ -131,4 +118,4 @@ const Store = () => {
   );
 };
 
-export default Store;
+export default Retail;

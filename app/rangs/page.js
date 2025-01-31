@@ -5,7 +5,7 @@ import axios from "axios";
 import ImportFile from "@/components/ImportFile";
 import RetailTable from "./table/page";
 
-const Store = () => {
+const Rangs = () => {
   const [state, setState] = useState({
     datas: [],
     dataResults: "",
@@ -87,13 +87,9 @@ const Store = () => {
               <p className="flex-[1.75]">Device_Type</p>
               <p className="flex-[1.75]">From</p>
               <p className="flex-[1.75]">Send_To</p>
-              <p className="flex-[1.75]">Issue_By</p>
               <p className="flex-[1.75]">Insert Date</p>
               <p className="flex-[1.75]">Sending Date</p>
             </div>
-            {/* <div className="w-[15%]  flex items-center justify-center uppercase">
-              Action
-            </div> */}
           </div>
           <div className="h-[92%] overflow-auto bg-white">
             {state.datas.map((item, i) => (
@@ -112,4 +108,4 @@ const Store = () => {
   );
 };
 
-export default Store;
+export default Rangs;

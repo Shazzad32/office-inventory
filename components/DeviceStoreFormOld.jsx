@@ -1,10 +1,12 @@
 "use client";
 import {
+  Autocomplete,
   Button,
   FormControl,
+  FormHelperText,
   InputLabel,
-  Select,
   MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -13,23 +15,36 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import dayjs from "dayjs";
-import TechNameName from "./TechnicianName";
-import DistrictName from "./DistrictName";
+import districtOptions from "@/data";
 
 const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
   const router = useRouter();
-  const [item, setItem] = useState({ ...defaultItem });
-  const [errors, setErrors] = useState({ issue_by: "", district: "" });
-  const [loading, setLoading] = useState(false);
+  const [item, setItem] = useState({
+    ...defaultItem,
+  });
+
+  // const [tech, setTech] = useState({ ...technicians });
+  // console.log("tech", tech);
+
+  const tech = ({...technicians})
+
+  const [errors, setErrors] = useState({
+    issue_by: "",
+    district: "",
+  });
 
   const validateFields = () => {
     let newErrors = { issue_by: "", district: "" };
-
+  
+    // Apply validation only if send_to is "Retail"
     if (item.send_to === "Retail") {
-      if (!item.issue_by) newErrors.issue_by = "Issue By is required";
-      if (!item.district) newErrors.district = "District Name is required";
+      if (!item.issue_by) {
+        newErrors.issue_by = "Issue By is required";
+      }
+      if (!item.district) {
+        newErrors.district = "District Name is required";
+      }
     }
-
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
   };
@@ -51,9 +66,34 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
     }
   };
 
+
+  // const updateDevice = async () => {
+  //   if (!validateFields()) return; // Only validate if needed
+  
+  //   try {
+  //     const res = await fetch(`/api/devices/${item._id}`, {
+  //       method: "PUT",
+  //       headers: { "Content-type": "application/json" },
+  //       body: JSON.stringify(item),
+  //     });
+  
+  //     if (!res.ok) {
+  //       throw new Error("Failed to update device");
+  //     }
+  
+  //     router.push("/store");
+  //   } catch (error) {
+  //     console.error("Update failed:", error);
+  //     alert("Failed to update device");
+  //   }
+  // };
+
+
+  const [loading, setLoading] = useState(false);
+
   const updateDevice = async () => {
     if (!validateFields()) return;
-
+    
     setLoading(true);
     try {
       const res = await fetch(`/api/devices/${item._id}`, {
@@ -61,25 +101,35 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(item),
       });
-
+  
       if (!res.ok) throw new Error("Failed to update device");
       router.push("/store");
     } catch (error) {
-      console.error("Update failed:", error);
       alert("Failed to update device");
     } finally {
       setLoading(false);
     }
   };
+  
+  // Disable button while loading
+  <Button onClick={isUpdate ? updateDevice : saveDevice} variant="outlined" disabled={loading}>
+    {loading ? "Processing..." : isUpdate ? "Update" : "Submit"}
+  </Button>
+  
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (item[name] !== value) {
-      setItem((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+    setItem((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleAutocompleteChange = (name, newValue) => {
+    setItem((prevState) => ({
+      ...prevState,
+      [name]: newValue,
+    }));
   };
 
   return (
@@ -112,7 +162,6 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
             />
           </>
         )}
-
         <FormControl fullWidth>
           <InputLabel>Device Type</InputLabel>
           <Select
@@ -141,21 +190,44 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
             </Select>
           </FormControl>
         )}
-
         {isUpdate && item.send_to === "Retail" && (
           <div className="w-full flex gap-2">
-            <TechNameName
-              value={item.issue_by}
-              onChange={handleChange}
-              error={errors.issue_by}
-              technicians={technicians}
-            />
-            <DistrictName
-              value={item.district}
-              onChange={handleChange}
-              error={errors.district}
-              technicians={technicians}
-            />
+            <FormControl className="w-[50%]" error={!!errors.issue_by}>
+              <InputLabel>Issue To</InputLabel>
+              <Select
+                type="text"
+                name="issue_by"
+                value={item.issue_by || ""}
+                onChange={handleChange}
+              >
+                {technicians.map((tech, i) => (
+                  <MenuItem key={i} value={tech.tech_name}>
+                    {tech.tech_name}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.issue_by && (
+                <FormHelperText>{errors.issue_by}</FormHelperText>
+              )}
+            </FormControl>
+            <FormControl className="w-[50%]" error={!!errors.district}>
+              <InputLabel>District</InputLabel>
+              <Select
+                type="text"
+                name="district"
+                value={item.district || ""}
+                onChange={handleChange}
+              >
+                {technicians.map((tech, i) => (
+                  <MenuItem key={i} value={tech.district}>
+                    {tech.district}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.district && (
+                <FormHelperText>{errors.district}</FormHelperText>
+              )}
+            </FormControl>
           </div>
         )}
 
@@ -176,7 +248,6 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
           />
         </LocalizationProvider>
       </div>
-
       <div className="flex w-full justify-end gap-2">
         <Button variant="outlined">
           <Link href="/store">Cancel</Link>
@@ -184,12 +255,12 @@ const DeviceStoreForm = ({ defaultItem, isUpdate, technicians }) => {
         <Button
           onClick={isUpdate ? updateDevice : saveDevice}
           variant="outlined"
-          disabled={loading}
         >
-          {loading ? "Processing..." : isUpdate ? "Update" : "Submit"}
+          {isUpdate ? "Update" : "Submit"}
         </Button>
       </div>
     </div>
   );
 };
+
 export default DeviceStoreForm;
